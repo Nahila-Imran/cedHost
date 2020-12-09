@@ -4,7 +4,7 @@ Author URL: http://w3layouts.com
 License: Creative Commons Attribution 3.0 Unported
 License URL: http://creativecommons.org/licenses/by/3.0/
 -->
-<?php
+_<?php
 include 'dbcon.inc.php';
 include 'user.inc.php';
 
@@ -19,6 +19,7 @@ $name = $email = $mobile = $password = $repassword = "";
 		$m = $_POST["mobile"];
 		$p = $_POST["password"];
 		$cp = $_POST["repassword"];
+		$status = $_POST["checkbox"];
 
 		if (empty($n)) 
         {
@@ -103,7 +104,7 @@ $name = $email = $mobile = $password = $repassword = "";
 		}
 	//	$user->addRecord($_POST);
 	$user = new User();
-	$user->addRecord($name, $email, $password, $mobile);
+	$user->addRecord($name, $email, $password, $mobile, $status);
     }
 
     function test_input($data) {
@@ -199,17 +200,17 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 						</div>
 						<div>
 							<span>Email Address<label>*</label></span>
-							<input type="text" name="email"> 
+							<input type="text" name="email"><a href="emailVerify.php" style="color:green;">Verify Email</a>
 							<span style="color: #FF0000;">* <?php echo $emailErr;?></span> 
 						</div>
 						<div>
 							<span>Mobile No.<label>*</label></span>
-							<input type="text" name="mobile"> 
+							<input type="text" name="mobile"><a href="mobileVerify.php" style="color:green;">Verify Mobile no.</a>  
 							<span style="color: #FF0000;">* <?php echo $mobileErr;?></span> 
 						</div>
 						<div class="clearfix"> </div>
 						<a class="news-letter" href="#">
-							<label class="checkbox"><input type="checkbox" name="checkbox" checked=""><i> </i>Sign Up for Newsletter</label>
+							<label class="checkbox"><input type="checkbox" name="checkbox" value="1" checked=""><i> </i>Is Admin?</label>
 						</a>
 						</div>
 						<div class="register-bottom-grid">
