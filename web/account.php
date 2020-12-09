@@ -1,10 +1,118 @@
 <!--
-Au<!--
 Author: W3layouts
 Author URL: http://w3layouts.com
 License: Creative Commons Attribution 3.0 Unported
 License URL: http://creativecommons.org/licenses/by/3.0/
 -->
+<?php
+include 'dbcon.inc.php';
+include 'user.inc.php';
+
+$nameErr = $emailErr = $mobileErr = $passwordErr = $repassErr="";
+$name = $email = $mobile = $password = $repassword = "";
+
+
+	if(isset($_POST['submit']))
+    {
+		$n = $_POST["name"];
+		$e = $_POST["email"];
+		$m = $_POST["mobile"];
+		$p = $_POST["password"];
+		$cp = $_POST["repassword"];
+
+		if (empty($n)) 
+        {
+            $nameErr = "Name is required";
+        } 
+        else {
+            $name = test_input($n);
+            // check if name only contains letters and whitespace
+            if (!preg_match("/^[a-zA-Z-' ]*$/",$name)) 
+            {
+            $nameErr = "Only letters and white space allowed";
+            }
+        }
+        
+        if (empty($e)) 
+        {
+            $emailErr = "Email is required";
+        } 
+        else {
+            $email = test_input($e);
+            // check if e-mail address is well-formed
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) 
+            {
+            $emailErr = "Invalid email format";
+            }
+        }
+        if (empty($m)) 
+        {
+            $mobileErr = "Enter mobile number";
+		} 
+		else 
+		{
+			$mobile = test_input($m);
+			if(!preg_match('/^[0-9]*$/',$mobile))
+			{
+				$mobileErr = "Enter only digits";
+			}
+			if(!preg_match('/^[0-9]{1}[1-9]{1}[\d]{9}$/',$mobile))
+			{
+				$mobileErr = "Enter correct format";
+				if(strlen($mobile)<11 || strlen($mobile)>11) 
+				{
+				$mobileErr = "Enter proper mobile number";
+				}
+			}
+			
+/*			if(!preg_match('/^[1-9]{1}[\d]{9}$/',$mobile))
+			{
+				$mobileErr = "Enter correct format..";
+				if(strlen($mobile)<10 || strlen($mobile)>10) 
+				{
+				$mobileErr = "Enter proper mobile number..";
+				}
+			} */
+		}
+
+		if (empty($cp)) 
+        {
+            $repassErr = "Please Enter confirm-password";
+		} 
+
+        if (empty($p)) 
+        {
+            $passwordErr = "Please Enter password";
+		} 
+		else {
+			$password = test_input($p);
+			if($password != $cp){
+				$passwordErr = "Password does'nt match";
+			}
+			if(strlen($p) < 8 || strlen($p) > 16){
+				$passwordErr = "Password must have range in between 8-16";
+			}
+			$upper = preg_match('@[A-Z]@', $password);
+			$lower = preg_match('@[a-z]@', $password);
+			$num = preg_match('@[0-9]@', $password);
+			$special = preg_match('@[^\w]@', $password);
+			if(!$upper || !$lower || !$num || !$special)
+			{
+				$passwordErr = "Password must contain atlest uppercase, lowercase, digits and special character";
+			}
+		}
+	//	$user->addRecord($_POST);
+	$user = new User();
+	$user->addRecord($name, $email, $password, $mobile);
+    }
+
+    function test_input($data) {
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+    }
+?>
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -19,6 +127,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <script src="js/jquery-1.11.1.min.js"></script>
 <script src="js/bootstrap.js"></script>
 <!---fonts-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link href='//fonts.googleapis.com/css?family=Voltaire' rel='stylesheet' type='text/css'>
 <link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css'>
 <!---fonts-->
@@ -80,44 +189,47 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 	<div class="main-1">
 		<div class="container">
 			<div class="register">
-		  	  <form> 
-				 <div class="register-top-grid">
-					<h3>personal information</h3>
-					 <div>
-						<span>First Name<label>*</label></span>
-						<input type="text"> 
-					 </div>
-					 <div>
-						<span>Last Name<label>*</label></span>
-						<input type="text"> 
-					 </div>
-					 <div>
-						 <span>Email Address<label>*</label></span>
-						 <input type="text"> 
-					 </div>
-					 <div class="clearfix"> </div>
-					   <a class="news-letter" href="#">
-						 <label class="checkbox"><input type="checkbox" name="checkbox" checked=""><i> </i>Sign Up for Newsletter</label>
-					   </a>
-					 </div>
-				     <div class="register-bottom-grid">
-						    <h3>login information</h3>
-							 <div>
-								<span>Password<label>*</label></span>
-								<input type="password">
-							 </div>
-							 <div>
-								<span>Confirm Password<label>*</label></span>
-								<input type="password">
-							 </div>
-					 </div>
-				</form>
-				<div class="clearfix"> </div>
-				<div class="register-but">
-				   <form>
-					   <input type="submit" value="submit">
-					   <div class="clearfix"> </div>
-				   </form>
+				<form action="" method="POST"> 
+					<div class="register-top-grid">
+						<h3>personal information</h3>
+						<div>
+							<span>Name<label>*</label></span>
+							<input type="text" name="name">
+							<span style="color: #FF0000;">* <?php echo $nameErr;?></span> 
+						</div>
+						<div>
+							<span>Email Address<label>*</label></span>
+							<input type="text" name="email"> 
+							<span style="color: #FF0000;">* <?php echo $emailErr;?></span> 
+						</div>
+						<div>
+							<span>Mobile No.<label>*</label></span>
+							<input type="text" name="mobile"> 
+							<span style="color: #FF0000;">* <?php echo $mobileErr;?></span> 
+						</div>
+						<div class="clearfix"> </div>
+						<a class="news-letter" href="#">
+							<label class="checkbox"><input type="checkbox" name="checkbox" checked=""><i> </i>Sign Up for Newsletter</label>
+						</a>
+						</div>
+						<div class="register-bottom-grid">
+								<h3>login information</h3>
+								<div>
+									<span>Password<label>*</label></span>
+									<input type="password" name="password">
+									<span style="color: #FF0000;">* <?php echo $passwordErr;?></span> 
+								</div>
+								<div>
+									<span>Confirm Password<label>*</label></span>
+									<input type="password" name="repassword">
+									<span style="color: #FF0000;">* <?php echo $repassErr;?></span> 
+								</div>
+						</div>
+						<div class="clearfix"> </div>
+						<div class="register-but">
+						<input type="submit" name="submit" value="submit">
+						<div class="clearfix"> </div>
+					</form>
 				</div>
 		   </div>
 		 </div>
