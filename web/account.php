@@ -5,6 +5,7 @@ License: Creative Commons Attribution 3.0 Unported
 License URL: http://creativecommons.org/licenses/by/3.0/
 -->
 _<?php
+include "header.php";
 include 'dbcon.inc.php';
 include 'user.inc.php';
 
@@ -19,7 +20,9 @@ $name = $email = $mobile = $password = $repassword = "";
 		$m = $_POST["mobile"];
 		$p = $_POST["password"];
 		$cp = $_POST["repassword"];
-		$status = $_POST["checkbox"];
+		$status = $_POST["is_admin"];
+		$ques = $_POST["question"];
+		$ans = $_POST["answer"];
 
 		if (empty($n)) 
         {
@@ -57,23 +60,23 @@ $name = $email = $mobile = $password = $repassword = "";
 			{
 				$mobileErr = "Enter only digits";
 			}
-			if(!preg_match('/^[0-9]{1}[1-9]{1}[\d]{9}$/',$mobile))
+/*			if(!preg_match('/^[0-9]{1}[1-9]{1}[\d]{9}$/',$mobile))
 			{
 				$mobileErr = "Enter correct format";
 				if(strlen($mobile)<11 || strlen($mobile)>11) 
 				{
 				$mobileErr = "Enter proper mobile number";
 				}
-			}
+			} */
 			
-/*			if(!preg_match('/^[1-9]{1}[\d]{9}$/',$mobile))
+			if(!preg_match('/^[1-9]{1}[\d]{9}$/',$mobile))
 			{
 				$mobileErr = "Enter correct format..";
 				if(strlen($mobile)<10 || strlen($mobile)>10) 
 				{
 				$mobileErr = "Enter proper mobile number..";
 				}
-			} */
+			} 
 		}
 
 		if (empty($cp)) 
@@ -104,7 +107,7 @@ $name = $email = $mobile = $password = $repassword = "";
 		}
 	//	$user->addRecord($_POST);
 	$user = new User();
-	$user->addRecord($name, $email, $password, $mobile, $status);
+	$user->addRecord($name, $email, $password, $mobile, $status, $ques, $ans);
     }
 
     function test_input($data) {
@@ -114,79 +117,9 @@ $name = $email = $mobile = $password = $repassword = "";
     return $data;
     }
 ?>
-<!DOCTYPE HTML>
-<html>
-<head>
-<title>Planet Hosting a Hosting Category Flat Bootstrap Responsive Website Template | Account :: w3layouts</title>
-<link href="css/bootstrap.css" rel="stylesheet" type="text/css" media="all"/>
-<link href="css/style.css" rel="stylesheet" type="text/css" media="all"/>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="keywords" content="Planet Hosting Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, 
-Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
-<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
-<script src="js/jquery-1.11.1.min.js"></script>
-<script src="js/bootstrap.js"></script>
-<!---fonts-->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link href='//fonts.googleapis.com/css?family=Voltaire' rel='stylesheet' type='text/css'>
-<link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css'>
-<!---fonts-->
-<!--script-->
-<link rel="stylesheet" href="css/swipebox.css">
-			<script src="js/jquery.swipebox.min.js"></script> 
-			    <script type="text/javascript">
-					jQuery(function($) {
-						$(".swipebox").swipebox();
-					});
-				</script>
-<!--script-->
-</head>
-<body>
-	<!---header--->
-		<div class="header">
-			<div class="container">
-				<nav class="navbar navbar-default">
-					<div class="container-fluid">
-			<!-- Brand and toggle get grouped for better mobile display -->
-						<div class="navbar-header">
-							<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-								<i class="sr-only">Toggle navigation</i>
-								<i class="icon-bar"></i>
-								<i class="icon-bar"></i>
-								<i class="icon-bar"></i>
-							</button>				  
-							<div class="navbar-brand">
-								<h1><a href="index.php"><span style="color: #e7663f">Ced</span><span style="color: #585ca7;">Hosting</span></a></h1>
-							</div>
-						</div>
-
-			<!-- Collect the nav links, forms, and other content for toggling -->
-						<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-							<ul class="nav navbar-nav">
-								<li class="active"><a href="index.php">Home <i class="sr-only">(current)</i></a></li>
-								<li><a href="about.php">About</a></li>
-								<li class="dropdown">
-									<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Services<i class="caret"></i></a>
-										<ul class="dropdown-menu">
-											<li><a href="blog.php">Hosting</a></li>
-										</ul>
-								</li>
-								<li><a href="pricing.php">Pricing</a></li>
-								<li><a href="blog.php">Blog</a></li>
-								<li><a href="contact.php">Contact</a></li>
-								<li><a href="cart.php"><i class="fas fa-cart-plus" style="font-size:28px;"></i></a></li>
-								<li><a href="login.php">Login/Logout</a></li>
-							</ul>
-						</div><!-- /.navbar-collapse -->
-					</div><!-- /.container-fluid -->
-				</nav>
-			</div>
-		</div>
-	<!---header--->
 		<!---login--->
-			<div class="content">
-				<!-- registration -->
+<div class="content">
+<!-- registration -->
 	<div class="main-1">
 		<div class="container">
 			<div class="register">
@@ -201,16 +134,31 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 						<div>
 							<span>Email Address<label>*</label></span>
 							<input type="text" name="email"><a href="emailVerify.php" style="color:green;">Verify Email</a>
-							<span style="color: #FF0000;">* <?php echo $emailErr;?></span> 
+							<span style="color: #FF0000;">* <?php echo $emailErr;?></span>
 						</div>
 						<div>
-							<span>Mobile No.<label>*</label></span>
-							<input type="text" name="mobile"><a href="mobileVerify.php" style="color:green;">Verify Mobile no.</a>  
+							<span>Security Question<label>*</label></span>
+							<select name="question" class="dropdown" style="width: 96%; padding: 9px 0;">
+                                <option>Select Security Question</option>
+                                <option value="Which is your favourite colour?">Which is your favourite colour?</option>
+                                <option value="What was your childhood nickname?">What was your childhood nickname?</option>
+                                <option value="What is your favourite place to visit?">What is your favourite place to visit?</option>
+                                <option value="What was your dream job as a child?">What was your dream job as a child?</option>
+								<option value="Which sport you like the most?">Which sport you like the most?</option>
+                            </select>
+						</div>
+						<div>
+							<span>Mobile No.<label>*</label>(10 digit are allowed)</span>
+							<input type="text" name="mobile"><a href="mobileVerify.php" style="color:green;">Verify Mobile No.</a>
 							<span style="color: #FF0000;">* <?php echo $mobileErr;?></span> 
+						</div>
+						<div>
+							<span>Answer<label>*</label></span>
+							<input type="text" name="answer"> 
 						</div>
 						<div class="clearfix"> </div>
 						<a class="news-letter" href="#">
-							<label class="checkbox"><input type="checkbox" name="checkbox" value="1" checked=""><i> </i>Is Admin?</label>
+							<label class="checkbox"><input type="checkbox" name="is_admin" value="1" checked=""><i> </i>Is Admin?</label>
 						</a>
 						</div>
 						<div class="register-bottom-grid">

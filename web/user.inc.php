@@ -12,9 +12,9 @@
             }
 
         }
-        public function addRecord($name, $email, $password, $mobile, $status){
-            $sql = "INSERT INTO tbl_user (`email`, `name`, `mobile`,`sign_up_date`,`password`, `is_admin`) 
-				VALUES ('".$email."', '".$name."', '".$mobile."', CURRENT_TIMESTAMP, '".$password."', '".$status."')";
+        public function addRecord($name, $email, $password, $mobile, $status, $ques, $ans){
+            $sql = "INSERT INTO tbl_user (`email`, `name`, `mobile`,`sign_up_date`,`password`, `is_admin`, `security_question`, `security_answer`) 
+				VALUES ('".$email."', '".$name."', '".$mobile."', CURRENT_TIMESTAMP, '".$password."', '".$status."', '".$ques."', '".$ans."')";
             $run = $this->connect()->query($sql);
             if ($run) 
             {
